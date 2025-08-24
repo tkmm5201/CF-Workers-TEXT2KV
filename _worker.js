@@ -191,7 +191,10 @@ else
   exit 1
 fi
 TEXT_CONTENT=$(cat "$FILENAME")
-curl -k -X POST "https://$DOMAIN/$FILENAME?token=$TOKEN" -H "Content-Type: application/json" --data-binary "{\"text\":\"$TEXT_CONTENT\"}"
+# 将文件内容进行 base64 编码，以避免特殊字符导致 JSON 格式错误
+BASE64_CONTENT=$(echo -n "$TEXT_CONTENT" | base64 -w 0)
+curl -k -X POST "https://$DOMAIN/$FILENAME?token=$TOKEN" -H "Content-Type: application/json" -d "{\\"b64\\":\\"$BASE64_CONTENT\\"}"
+echo ""
 echo "更新数据完成"
 `;
 }
